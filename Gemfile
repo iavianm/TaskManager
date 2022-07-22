@@ -23,6 +23,9 @@ gem 'ransack'
 gem 'responders'
 gem 'active_model_serializers'
 
+gem 'webpacker-react'
+gem 'js-routes', '~>1.4.14'
+
 group :development, :test do
   gem 'factory_bot_rails'
   gem 'rubocop'

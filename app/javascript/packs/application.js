@@ -2,12 +2,15 @@
 // present in this directory. You're encouraged to place your actual application logic in
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
+import 'material-design-lite/material.js';
 
 import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import 'channels';
 
-import 'material-design-lite/material.js';
+import WebpackerReact from 'webpacker-react';
+import TaskBoard from '../components/TaskBoard';
 
 Rails.start();
 ActiveStorage.start();
+WebpackerReact.setup({ TaskBoard });
