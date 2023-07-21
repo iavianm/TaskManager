@@ -6,4 +6,3 @@ class UserTest < ActiveSupport::TestCase
     assert user.persisted?
   end
 end
-
