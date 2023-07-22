@@ -1,2 +1,0 @@
-class Developer < User
-end
