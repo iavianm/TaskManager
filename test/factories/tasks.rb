@@ -4,7 +4,6 @@ FactoryBot.define do
     description
     author factory: :manager
     assignee factory: :manager
-    state { 'new_task' }
-    expired_at
+    expired_at { DateTime.now }
   end
 end
