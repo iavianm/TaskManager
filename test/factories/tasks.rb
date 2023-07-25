@@ -4,7 +4,6 @@ FactoryBot.define do
     description
     author_id { 1 }
     assignee_id { 1 }
-    state { 'new_task' }
-    expired_at
+    expired_at { DateTime.now }
   end
 end
