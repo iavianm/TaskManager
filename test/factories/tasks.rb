@@ -4,6 +4,6 @@ FactoryBot.define do
     description
     author factory: :manager
     assignee factory: :manager
-    expired_at { DateTime.now }
+    expired_at
   end
 end
