@@ -8,4 +8,7 @@ FactoryBot.define do
   sequence :avatar do |n|
     "avatar#{n}#{SecureRandom.urlsafe_base64(8)}.com"
   end
+  sequence :expired_at do |n|
+    DateTime.now + n
+  end
 end
