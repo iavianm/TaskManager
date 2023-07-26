@@ -4,6 +4,6 @@ FactoryBot.define do
     description
     author_id { 1 }
     assignee_id { 1 }
-    expired_at { DateTime.now }
+    expired_at
   end
 end
