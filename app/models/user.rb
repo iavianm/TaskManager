@@ -7,6 +7,6 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: /\A.+@.+\z/
 
   def self.ransackable_attributes(_auth_object = nil)
-    %w[email first_name id last_name type]
+    ['email', 'first_name', 'id', 'last_name', 'type']
   end
 end
