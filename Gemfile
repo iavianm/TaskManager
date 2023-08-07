@@ -24,6 +24,7 @@ gem 'slim-rails'
 gem 'kaminari'
 gem 'ransack'
 gem 'responders'
+gem 'webpacker-react'
 gem 'active_model_serializers'
 
 # Reduces boot times through caching; required in config/boot.rb
