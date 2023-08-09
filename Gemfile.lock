@@ -175,7 +175,7 @@ GEM
       activerecord (= 6.1.7.4)
       activestorage (= 6.1.7.4)
       activesupport (= 6.1.7.4)
-      bundler (~> 2.2)
+      bundler (>= 1.15.0)
       railties (= 6.1.7.4)
       sprockets-rails (>= 2.0.0)
     rails-dom-testing (2.2.0)
