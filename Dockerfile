@@ -7,7 +7,7 @@ RUN apk update \
     && apk upgrade \
     && apk add --update --no-cache $PACKAGES
 
-RUN gem install bundler:2.1.4
+RUN gem install bundler:2.2.33
 
 RUN mkdir $RAILS_ROOT
 WORKDIR $RAILS_ROOT
