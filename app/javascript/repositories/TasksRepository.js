@@ -14,7 +14,11 @@ export default {
 
   update(id, task = {}) {
     const path = apiV1TaskPath(id);
-    return FetchHelper.put(path, task);
+    const body = {
+      task: { ...task, id },
+    };
+
+    return FetchHelper.put(path, body);
   },
 
   create(task = {}) {
