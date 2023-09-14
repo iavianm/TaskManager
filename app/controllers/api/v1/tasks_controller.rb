@@ -2,7 +2,7 @@ class Api::V1::TasksController < Api::V1::ApplicationController
   respond_to :json
 
   def index
-    tasks = Task.all.
+    tasks = Task.all.order(created_at: :desc).
       ransack(ransack_params).
       result.
       page(page).

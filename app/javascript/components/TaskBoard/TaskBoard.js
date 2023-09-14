@@ -8,6 +8,12 @@ import Task from '../Task';
 import TasksRepository from '../../repositories/TasksRepository';
 import ColumnHeader from '../ColumnHeader';
 
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
+import useStyles from './useStyles';
+import AddPopup from '../AddPopup';
+import TaskForm from '../../forms/TaskForm';
+
 const STATES = [
   { key: 'new_task', value: 'New' },
   { key: 'in_development', value: 'In Dev' },
@@ -30,6 +36,12 @@ const initialBoard = {
 function TaskBoard() {
   const [board, setBoard] = useState(initialBoard);
   const [boardCards, setBoardCards] = useState([]);
+  const MODES = {
+    ADD: 'add',
+    NONE: 'none',
+  };
+  const [mode, setMode] = useState(MODES.NONE);
+  const styles = useStyles();
 
   const loadColumn = (state, page, perPage) =>
     TasksRepository.index({
@@ -100,14 +112,36 @@ function TaskBoard() {
       });
   };
 
+  const handleAddPopupOpen = () => {
+    setMode(MODES.ADD);
+  };
+
+  const handleClose = () => {
+    setMode(MODES.NONE);
+  };
+
+  const handleTaskCreate = (params) => {
+    const attributes = TaskForm.attributesToSubmit(params);
+    return TasksRepository.create(attributes).then(({ data: { task } }) => {
+      loadColumnInitial(task.state);
+      handleClose();
+    });
+  };
+
   return (
-    <KanbanBoard
-      renderCard={(card) => <Task task={card} />}
-      renderColumnHeader={(column) => <ColumnHeader column={column} onLoadMore={loadColumnMore} />}
-      onCardDragEnd={handleCardDragEnd}
-    >
-      {board}
-    </KanbanBoard>
+    <>
+      <Fab className={styles.addButton} color="primary" aria-label="add" onClick={handleAddPopupOpen}>
+        <AddIcon />
+      </Fab>
+      <KanbanBoard
+        renderCard={(card) => <Task task={card} />}
+        renderColumnHeader={(column) => <ColumnHeader column={column} onLoadMore={loadColumnMore} />}
+        onCardDragEnd={handleCardDragEnd}
+      >
+        {board}
+      </KanbanBoard>
+      {mode === MODES.ADD && <AddPopup onCardCreate={handleTaskCreate} onClose={handleClose} />}
+    </>
   );
 }
 
