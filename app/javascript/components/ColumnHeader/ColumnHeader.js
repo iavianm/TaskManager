@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import SystemUpdateAltIcon from '@material-ui/icons/SystemUpdateAlt';
 
-import useStyles from './useStyles';
+import useStyles from 'components/ColumnHeader/useStyles';
 
 function ColumnHeader({ column, onLoadMore }) {
   const styles = useStyles();

@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import Form from 'components/Form';
 
-import useStyles from './useStyles';
+import useStyles from 'components/EditPopup/useStyles';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import CardActions from '@material-ui/core/CardActions';

@@ -14,7 +14,7 @@ import TextField from '@material-ui/core/TextField';
 
 import TaskForm from 'forms/TaskForm';
 
-import useStyles from './useStyles';
+import useStyles from 'components/AddPopup/useStyles';
 
 function AddPopup({ onClose, onCardCreate }) {
   const [task, changeTask] = useState(TaskForm.defaultAttributes());
