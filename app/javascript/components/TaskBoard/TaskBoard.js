@@ -132,7 +132,7 @@ function TaskBoard() {
   const handleTaskCreate = (params) => {
     const attributes = TaskForm.attributesToSubmit(params);
     return TasksRepository.create(attributes).then(({ data: { task } }) => {
-      loadColumnInitial(task.state);
+      loadColumnInitial(task.state, 1, boardCards[task.state].cards.length + 1);
       handleClose();
     });
   };
