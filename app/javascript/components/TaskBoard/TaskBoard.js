@@ -66,6 +66,7 @@ function TaskBoard() {
     loadColumn(state, page, perPage).then(({ data }) => {
       setBoardCards((prevState) => {
         const { cards } = prevState[state];
+
         return {
           ...prevState,
           [state]: {
