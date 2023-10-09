@@ -65,15 +65,13 @@ function TaskBoard() {
   const loadColumnMore = (state, page = 1, perPage = 10) => {
     loadColumn(state, page, perPage).then(({ data }) => {
       setBoardCards((prevState) => {
-        const currentCards = prevState[state]?.cards || [];
-        const currentMeta = prevState[state]?.meta || {};
-
-        const newCards = [...currentCards, ...data.items];
-        const newMeta = { ...currentMeta, ...data.meta };
-
+        const { cards } = prevState[state];
         return {
           ...prevState,
-          [state]: { cards: newCards, meta: newMeta },
+          [state]: {
+            cards: [...cards, ...data.items],
+            meta: data.meta,
+          },
         };
       });
     });
@@ -132,7 +130,7 @@ function TaskBoard() {
   const handleTaskCreate = (params) => {
     const attributes = TaskForm.attributesToSubmit(params);
     return TasksRepository.create(attributes).then(({ data: { task } }) => {
-      loadColumnInitial(task.state, 1, boardCards[task.state].cards.length + 1);
+      loadColumnMore(task.state);
       handleClose();
     });
   };

@@ -2,11 +2,11 @@ class Api::V1::TasksController < Api::V1::ApplicationController
   respond_to :json
 
   def index
-    tasks = Task.all.order(created_at: :desc).
+    tasks = Task.all.
       ransack(ransack_params).
       result.
       page(page).
-      per(params[:per_page] || per_page)
+      per(per_page)
 
     respond_with(tasks, each_serializer: TaskSerializer, root: 'items', meta: build_meta(tasks))
   end
