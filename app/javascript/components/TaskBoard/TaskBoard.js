@@ -131,18 +131,46 @@ function TaskBoard() {
   const handleTaskCreate = (params) => {
     const attributes = TaskForm.attributesToSubmit(params);
     return TasksRepository.create(attributes).then(({ data: { task } }) => {
-      loadColumnInitial(task.state);
+      setBoardCards((prevState) => {
+        const { cards, meta } = prevState[task.state];
+        const newCards = [task, ...cards.slice(0, -1)];
+        const newMeta = {
+          ...meta,
+          totalCount: meta.totalCount + 1,
+        };
+
+        return {
+          ...prevState,
+          [task.state]: {
+            cards: newCards,
+            meta: newMeta,
+          },
+        };
+      });
+
       handleClose();
     });
   };
 
   const loadTask = (id) => TasksRepository.show(id).then(({ data: { task } }) => task);
 
-  const handleTaskUpdate = (task) => {
-    const attributes = TaskForm.attributesToSubmit(task);
+  const handleTaskUpdate = (updatedTask) => {
+    const attributes = TaskForm.attributesToSubmit(updatedTask);
 
-    return TasksRepository.update(task.id, attributes).then(() => {
-      loadColumnInitial(task.state);
+    return TasksRepository.update(updatedTask.id, attributes).then(({ data: { task } }) => {
+      setBoardCards((prevState) => {
+        const { cards, meta } = prevState[task.state];
+
+        const updatedCards = cards.map((card) => (card.id === task.id ? task : card));
+
+        return {
+          ...prevState,
+          [task.state]: {
+            cards: updatedCards,
+            meta,
+          },
+        };
+      });
       handleClose();
     });
   };
