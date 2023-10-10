@@ -16,7 +16,7 @@ class Api::V1::ApplicationController < Api::ApplicationController
   end
 
   def ransack_params
-    search_params = params.to_unsafe_h.fetch(:q, { s: RANSACK_DEFAULT_SORT })
+    search_params = params.to_unsafe_h.fetch(:q, {})
     search_params[:s] ||= RANSACK_DEFAULT_SORT
     search_params
   end
