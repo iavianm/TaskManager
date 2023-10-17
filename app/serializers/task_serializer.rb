@@ -1,6 +1,6 @@
 class TaskSerializer < ApplicationSerializer
   attributes :id, :name, :description, :state, :expired_at, :transitions
-  belongs_to :author
+  belongs_to :author, serializer: AuthorSerializer
   belongs_to :assignee
 
   def transitions

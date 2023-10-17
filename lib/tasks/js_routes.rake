@@ -1,0 +1,10 @@
+# frozen_string_literal: true
+
+require 'js-routes'
+
+namespace :js_routes do
+  desc 'Generate js routes for webpack'
+  task generate: :environment do
+    JsRoutes.generate!('routes/Routes.js', camel_case: true)
+  end
+end
