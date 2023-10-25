@@ -7,6 +7,7 @@ import { propOr } from 'ramda';
 import Task from 'components/Task';
 import TasksRepository from 'repositories/TasksRepository';
 import ColumnHeader from 'components/ColumnHeader';
+import TaskPresenter from 'presenters/TaskPresenter';
 
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
@@ -99,7 +100,7 @@ function TaskBoard() {
   useEffect(() => generateBoard(), [boardCards]);
 
   const handleCardDragEnd = (task, source, destination) => {
-    const transition = task.transitions.find(({ to }) => destination.toColumnId === to);
+    const transition = TaskPresenter.transitions(task).find(({ to }) => destination.toColumnId === to);
     if (!transition) {
       return null;
     }
@@ -132,7 +133,7 @@ function TaskBoard() {
     const attributes = TaskForm.attributesToSubmit(params);
     return TasksRepository.create(attributes).then(({ data: { task } }) => {
       setBoardCards((prevState) => {
-        const { cards, meta } = prevState[task.state];
+        const { cards, meta } = prevState[TaskPresenter.state(task)];
         const newCards = [task, ...cards.slice(0, -1)];
         const newMeta = {
           ...meta,
@@ -141,7 +142,7 @@ function TaskBoard() {
 
         return {
           ...prevState,
-          [task.state]: {
+          [TaskPresenter.state(task)]: {
             cards: newCards,
             meta: newMeta,
           },
@@ -159,13 +160,13 @@ function TaskBoard() {
 
     return TasksRepository.update(updatedTask.id, attributes).then(({ data: { task } }) => {
       setBoardCards((prevState) => {
-        const { cards, meta } = prevState[task.state];
+        const { cards, meta } = prevState[TaskPresenter.state(task)];
 
         const updatedCards = cards.map((card) => (card.id === task.id ? task : card));
 
         return {
           ...prevState,
-          [task.state]: {
+          [TaskPresenter.state(task)]: {
             cards: updatedCards,
             meta,
           },
@@ -177,7 +178,7 @@ function TaskBoard() {
 
   const handleTaskDestroy = (task) =>
     TasksRepository.destroy(task).then(() => {
-      loadColumnInitial(task.state);
+      loadColumnInitial(TaskPresenter.state(task));
       handleClose();
     });
 
