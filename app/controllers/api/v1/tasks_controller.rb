@@ -32,6 +32,17 @@ class Api::V1::TasksController < Api::V1::ApplicationController
     respond_with(task)
   end
 
+  def next_task
+    offset_value = params[:offset].to_i
+    task = Task.ransack(ransack_params).result.offset(offset_value).limit(1).first
+
+    if task.present?
+      respond_with(task, serializer: TaskSerializer)
+    else
+      head(:no_content)
+    end
+  end
+
   private
 
   def task_params

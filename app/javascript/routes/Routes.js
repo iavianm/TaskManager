@@ -638,6 +638,14 @@ export const newSessionPath = /*#__PURE__*/ __jsr.r({"format":{}}, [2,[7,"/"],[2
 
 /**
  * Generates rails route to
+ * /api/v1/tasks/next_task(.:format)
+ * @param {object | undefined} options
+ * @returns {string} route path
+ */
+export const nextTaskApiV1TasksPath = /*#__PURE__*/ __jsr.r({"format":{"d":"json"}}, [2,[7,"/"],[2,[6,"api"],[2,[7,"/"],[2,[6,"v1"],[2,[7,"/"],[2,[6,"tasks"],[2,[7,"/"],[2,[6,"next_task"],[1,[2,[8,"."],[3,"format"]]]]]]]]]]]);
+
+/**
+ * Generates rails route to
  * /rails/active_storage/representations/redirect/:signed_blob_id/:variation_key/*filename(.:format)
  * @param {any} signedBlobId
  * @param {any} variationKey
