@@ -103,8 +103,8 @@ const tasksSlice = createSlice({
   },
 });
 
-const { loadColumnSuccess, loadColumnMoreSuccess, createTaskSuccess, updateTaskSuccess, deleteTaskSuccess, addTaskSuccess } =
-  tasksSlice.actions;
+const { loadColumnSuccess, loadColumnMoreSuccess } = tasksSlice.actions;
+const { createTaskSuccess, updateTaskSuccess, deleteTaskSuccess, addTaskSuccess } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
 
