@@ -173,14 +173,9 @@ export const useTasksActions = () => {
     return column.cards[column.cards.length - 1].id;
   };
 
-  const deleteTask = (task) => {
-    TasksRepository.destroy(task.id).then(() => {
-      dispatch(deleteTaskSuccess(task));
-    });
-
+  const addTask = (task) => {
     const lastCardId = lastTaskStateId(task.state);
-
-    return TasksRepository.index({
+    TasksRepository.index({
       q: { stateEq: task.state, idLt: lastCardId },
       page: 1,
       perPage: 1,
@@ -190,6 +185,12 @@ export const useTasksActions = () => {
       }
     });
   };
+
+  const deleteTask = (task) =>
+    TasksRepository.destroy(task.id).then(() => {
+      dispatch(deleteTaskSuccess(task));
+      addTask(task);
+    });
 
   return {
     loadBoard,
