@@ -8,8 +8,12 @@ import useStyles from 'components/Form/useStyles';
 import UserSelect from 'components/UserSelect';
 import TaskPresenter from 'presenters/TaskPresenter';
 
-function Form({ errors, onChange, task }) {
-  const handleChangeTextField = (fieldName) => (event) => onChange({ ...task, [fieldName]: event.target.value });
+function Form({ errors, onChange, task, formErrors, handleButtonState, clearErrorMessage }) {
+  const handleChangeTextField = (fieldName) => (event) => {
+    onChange({ ...task, [fieldName]: event.target.value });
+    handleButtonState();
+    clearErrorMessage();
+  };
   const styles = useStyles();
 
   const handleChangeSelect = (fieldName) => (user) => onChange({ ...task, [fieldName]: user });
@@ -17,8 +21,9 @@ function Form({ errors, onChange, task }) {
   return (
     <form className={styles.root}>
       <TextField
+        FormHelperTextProps={{ className: errors.name || formErrors.name ? styles.errorText : '' }}
         error={has('name', errors)}
-        helperText={errors.name}
+        helperText={errors.name || formErrors.name}
         onChange={handleChangeTextField('name')}
         value={TaskPresenter.name(task)}
         label="Name"
@@ -26,8 +31,9 @@ function Form({ errors, onChange, task }) {
         margin="dense"
       />
       <TextField
+        FormHelperTextProps={{ className: errors.description || formErrors.description ? styles.errorText : '' }}
         error={has('description', errors)}
-        helperText={errors.description}
+        helperText={errors.description || formErrors.description}
         onChange={handleChangeTextField('description')}
         value={TaskPresenter.description(task)}
         label="Description"
@@ -68,6 +74,9 @@ Form.propTypes = {
     author: PropTypes.arrayOf(PropTypes.string),
     assignee: PropTypes.arrayOf(PropTypes.string),
   }),
+  formErrors: PropTypes.shape().isRequired,
+  handleButtonState: PropTypes.func.isRequired,
+  clearErrorMessage: PropTypes.func.isRequired,
 };
 
 Form.defaultProps = {

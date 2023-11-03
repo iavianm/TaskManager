@@ -17,7 +17,7 @@ import TaskForm from 'forms/TaskForm';
 import useStyles from 'components/AddPopup/useStyles';
 import TaskPresenter from 'presenters/TaskPresenter';
 
-function AddPopup({ onClose, onCardCreate }) {
+function AddPopup({ onClose, onCardCreate, formErrors, clearErrorMessage }) {
   const [task, changeTask] = useState(TaskForm.defaultAttributes());
   const [isSaving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
@@ -33,7 +33,11 @@ function AddPopup({ onClose, onCardCreate }) {
       }
     });
   };
-  const handleChangeTextField = (fieldName) => (event) => changeTask({ ...task, [fieldName]: event.target.value });
+  const handleChangeTextField = (fieldName) => (event) => {
+    changeTask({ ...task, [fieldName]: event.target.value });
+    setSaving(false);
+    clearErrorMessage();
+  };
   const styles = useStyles();
 
   return (
@@ -50,8 +54,9 @@ function AddPopup({ onClose, onCardCreate }) {
         <CardContent>
           <div className={styles.form}>
             <TextField
+              FormHelperTextProps={{ className: errors.name || formErrors.name ? styles.errorText : '' }}
               error={has('name', errors)}
-              helperText={errors.name}
+              helperText={errors.name || formErrors.name}
               onChange={handleChangeTextField('name')}
               value={TaskPresenter.name(task)}
               label="Name"
@@ -59,8 +64,9 @@ function AddPopup({ onClose, onCardCreate }) {
               margin="dense"
             />
             <TextField
+              FormHelperTextProps={{ className: errors.description || formErrors.description ? styles.errorText : '' }}
               error={has('description', errors)}
-              helperText={errors.description}
+              helperText={errors.description || formErrors.description}
               onChange={handleChangeTextField('description')}
               value={TaskPresenter.description(task)}
               label="Description"
@@ -82,6 +88,8 @@ function AddPopup({ onClose, onCardCreate }) {
 AddPopup.propTypes = {
   onClose: PropTypes.func.isRequired,
   onCardCreate: PropTypes.func.isRequired,
+  formErrors: PropTypes.shape().isRequired,
+  clearErrorMessage: PropTypes.func.isRequired,
 };
 
 export default AddPopup;

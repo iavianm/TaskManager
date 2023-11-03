@@ -16,7 +16,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TaskPresenter from 'presenters/TaskPresenter';
 
-function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate }) {
+function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate, formErrors, clearErrorMessage }) {
   const [task, setTask] = useState(null);
   const [isSaving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
@@ -25,6 +25,10 @@ function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate })
   useEffect(() => {
     onCardLoad(cardId).then(setTask);
   }, []);
+
+  const handleButtonState = () => {
+    setSaving(false);
+  };
 
   const handleCardUpdate = () => {
     setSaving(true);
@@ -67,7 +71,14 @@ function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate })
               <CircularProgress />
             </div>
           ) : (
-            <Form errors={errors} onChange={setTask} task={task} />
+            <Form
+              errors={errors}
+              onChange={setTask}
+              task={task}
+              formErrors={formErrors}
+              handleButtonState={handleButtonState}
+              clearErrorMessage={clearErrorMessage}
+            />
           )}
         </CardContent>
         <CardActions className={styles.actions}>
@@ -95,6 +106,8 @@ EditPopup.propTypes = {
   onCardDestroy: PropTypes.func.isRequired,
   onCardLoad: PropTypes.func.isRequired,
   onCardUpdate: PropTypes.func.isRequired,
+  formErrors: PropTypes.shape().isRequired,
+  clearErrorMessage: PropTypes.func.isRequired,
 };
 
 export default EditPopup;

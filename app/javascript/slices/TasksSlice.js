@@ -1,4 +1,3 @@
-import { propEq } from 'ramda';
 import { createSlice } from '@reduxjs/toolkit';
 import TasksRepository from 'repositories/TasksRepository';
 import { STATES } from 'presenters/TaskPresenter';
@@ -24,7 +23,7 @@ const tasksSlice = createSlice({
   reducers: {
     loadColumnSuccess(state, { payload }) {
       const { items, meta, columnId } = payload;
-      const column = state.board.columns.find(propEq('id', columnId));
+      const column = state.board.columns.find((c) => c.id === columnId);
 
       state.board = changeColumn(state.board, column, {
         cards: items,
@@ -35,7 +34,7 @@ const tasksSlice = createSlice({
     },
     loadColumnMoreSuccess(state, { payload }) {
       const { items, meta, columnId } = payload;
-      const column = state.board.columns.find(propEq('id', columnId));
+      const column = state.board.columns.find((c) => c.id === columnId);
 
       state.board = changeColumn(state.board, column, {
         cards: [...column.cards, ...items],
@@ -44,11 +43,10 @@ const tasksSlice = createSlice({
 
       return state;
     },
-    loadNewTask(state, { payload }) {
-      const { columnId, ...rest } = payload;
-      const column = state.board.columns.find(propEq('id', columnId));
+    createTaskSuccess(state, { payload }) {
+      const column = state.board.columns.find((c) => c.id === payload.state);
       const { cards, meta } = column;
-      const newCards = [rest, ...cards.slice(0, -1)];
+      const newCards = [payload, ...cards.slice(0, -1)];
       const newMeta = {
         ...meta,
         totalCount: meta.totalCount + 1,
@@ -61,11 +59,10 @@ const tasksSlice = createSlice({
 
       return state;
     },
-    loadUpdateTask(state, { payload }) {
-      const { columnId, ...rest } = payload;
-      const column = state.board.columns.find(propEq('id', columnId));
+    updateTaskSuccess(state, { payload }) {
+      const column = state.board.columns.find((c) => c.id === payload.state);
       const { cards, meta } = column;
-      const updatedCards = cards.map((card) => (card.id === rest.id ? rest : card));
+      const updatedCards = cards.map((card) => (card.id === payload.id ? payload : card));
 
       state.board = changeColumn(state.board, column, {
         cards: updatedCards,
@@ -74,23 +71,10 @@ const tasksSlice = createSlice({
 
       return state;
     },
-    loadNextTask(state, { payload }) {
-      const { columnId, ...rest } = payload;
-      const column = state.board.columns.find(propEq('id', columnId));
+    deleteTaskSuccess(state, { payload }) {
+      const column = state.board.columns.find((c) => c.id === payload.state);
       const { cards, meta } = column;
-
-      state.board = changeColumn(state.board, column, {
-        cards: [...cards, rest],
-        meta,
-      });
-
-      return state;
-    },
-    loadDeleteTask(state, { payload }) {
-      const { columnId, ...rest } = payload;
-      const column = state.board.columns.find(propEq('id', columnId));
-      const { cards, meta } = column;
-      const updatedCards = cards.filter((card) => card.id !== rest.id);
+      const updatedCards = cards.filter((card) => card.id !== payload.id);
 
       const newMeta = {
         ...meta,
@@ -107,7 +91,7 @@ const tasksSlice = createSlice({
   },
 });
 
-const { loadColumnSuccess, loadColumnMoreSuccess, loadNewTask, loadUpdateTask, loadDeleteTask, loadNextTask } =
+const { loadColumnSuccess, loadColumnMoreSuccess, createTaskSuccess, updateTaskSuccess, deleteTaskSuccess } =
   tasksSlice.actions;
 
 export default tasksSlice.reducer;
@@ -157,7 +141,7 @@ export const useTasksActions = () => {
   const createTask = (params) => {
     const attributes = TaskForm.attributesToSubmit(params);
     return TasksRepository.create(attributes).then(({ data: { task } }) => {
-      dispatch(loadNewTask({ columnId: TaskPresenter.state(task), ...task }));
+      dispatch(createTaskSuccess(task));
     });
   };
 
@@ -165,36 +149,13 @@ export const useTasksActions = () => {
     const attributes = TaskForm.attributesToSubmit(updatedTask);
 
     return TasksRepository.update(updatedTask.id, attributes).then(({ data: { task } }) => {
-      dispatch(loadUpdateTask({ columnId: TaskPresenter.state(task), ...task }));
+      dispatch(updateTaskSuccess(task));
     });
-  };
-
-  const getColumnTasksCount = (state) => {
-    const column = board.columns.find(propEq('id', state));
-    return column.cards.length;
-  };
-
-  const getNextTask = (state) => {
-    const currentTasksCount = getColumnTasksCount(state);
-    TasksRepository.next_task({
-      q: { stateEq: state },
-      offset: currentTasksCount - 1,
-    })
-      .then((response) => {
-        if (response.status !== 204) {
-          const { task } = response.data;
-          dispatch(loadNextTask({ columnId: TaskPresenter.state(task), ...task }));
-        }
-      })
-      .catch((error) => {
-        console.error('Failed to fetch the next task:', error);
-      });
   };
 
   const deleteTask = (task) =>
     TasksRepository.destroy(task).then(() => {
-      dispatch(loadDeleteTask({ columnId: TaskPresenter.state(task), ...task }));
-      getNextTask(TaskPresenter.state(task));
+      dispatch(deleteTaskSuccess(task));
     });
 
   return {

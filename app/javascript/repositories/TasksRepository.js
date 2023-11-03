@@ -7,11 +7,6 @@ export default {
     return FetchHelper.get(path, params);
   },
 
-  next_task(params) {
-    const path = routes.nextTaskApiV1TasksPath();
-    return FetchHelper.get(path, params);
-  },
-
   show(id) {
     const path = routes.apiV1TaskPath(id);
     return FetchHelper.get(path);

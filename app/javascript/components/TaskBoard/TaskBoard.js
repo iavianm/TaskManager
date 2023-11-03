@@ -21,9 +21,12 @@ function TaskBoard() {
   };
   const [mode, setMode] = useState(MODES.NONE);
   const [openedTaskId, setOpenedTaskId] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
   const styles = useStyles();
 
   useEffect(() => loadBoard(), []);
+
+  const handleClearErrorMessage = () => setFormErrors({});
 
   const handleAddPopupOpen = () => {
     setMode(MODES.ADD);
@@ -37,19 +40,32 @@ function TaskBoard() {
   const handleClose = () => {
     setMode(MODES.NONE);
     setOpenedTaskId(null);
+    handleClearErrorMessage();
   };
+
+  const formatErrorMessages = (errorObject) =>
+    Object.keys(errorObject).reduce((acc, key) => {
+      const [errorMessage] = errorObject[key];
+      return { ...acc, [key]: errorMessage };
+    }, {});
 
   const handleTaskCreate = (params) =>
     createTask(params)
       .then(() => handleClose())
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setFormErrors(formatErrorMessages(err));
+        console.log(err);
+      });
 
   const loadTask = (id) => TasksRepository.show(id).then(({ data: { task } }) => task);
 
   const handleTaskUpdate = (updatedTask) =>
     updateTask(updatedTask)
       .then(() => handleClose())
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setFormErrors(formatErrorMessages(err));
+        console.log(err);
+      });
 
   const handleTaskDestroy = (task) =>
     deleteTask(task)
@@ -68,7 +84,14 @@ function TaskBoard() {
       >
         {board}
       </KanbanBoard>
-      {mode === MODES.ADD && <AddPopup onCardCreate={handleTaskCreate} onClose={handleClose} />}
+      {mode === MODES.ADD && (
+        <AddPopup
+          onCardCreate={handleTaskCreate}
+          formErrors={formErrors}
+          onClose={handleClose}
+          clearErrorMessage={handleClearErrorMessage}
+        />
+      )}
       {mode === MODES.EDIT && (
         <EditPopup
           onCardLoad={loadTask}
@@ -76,6 +99,8 @@ function TaskBoard() {
           onCardUpdate={handleTaskUpdate}
           onClose={handleClose}
           cardId={openedTaskId}
+          formErrors={formErrors}
+          clearErrorMessage={handleClearErrorMessage}
         />
       )}
     </>
