@@ -88,10 +88,22 @@ const tasksSlice = createSlice({
 
       return state;
     },
+    addTaskSuccess(state, { payload }) {
+      const card = payload.items[0];
+      const column = state.board.columns.find((c) => c.id === card.state);
+      const { cards, meta } = column;
+
+      state.board = changeColumn(state.board, column, {
+        cards: [...cards, card],
+        meta,
+      });
+
+      return state;
+    },
   },
 });
 
-const { loadColumnSuccess, loadColumnMoreSuccess, createTaskSuccess, updateTaskSuccess, deleteTaskSuccess } =
+const { loadColumnSuccess, loadColumnMoreSuccess, createTaskSuccess, updateTaskSuccess, deleteTaskSuccess, addTaskSuccess } =
   tasksSlice.actions;
 
 export default tasksSlice.reducer;
@@ -153,10 +165,31 @@ export const useTasksActions = () => {
     });
   };
 
-  const deleteTask = (task) =>
-    TasksRepository.destroy(task).then(() => {
+  const lastTaskStateId = (state) => {
+    const column = board.columns.find((c) => c.id === state);
+    if (column.cards.length === 0) {
+      return null;
+    }
+    return column.cards[column.cards.length - 1].id;
+  };
+
+  const deleteTask = (task) => {
+    TasksRepository.destroy(task.id).then(() => {
       dispatch(deleteTaskSuccess(task));
     });
+
+    const lastCardId = lastTaskStateId(task.state);
+
+    return TasksRepository.index({
+      q: { stateEq: task.state, idLt: lastCardId },
+      page: 1,
+      perPage: 1,
+    }).then(({ data }) => {
+      if (data.items.length > 0) {
+        dispatch(addTaskSuccess(data));
+      }
+    });
+  };
 
   return {
     loadBoard,
