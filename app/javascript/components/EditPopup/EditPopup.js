@@ -60,28 +60,7 @@ function EditPopup({ cardId, onClose, onCardLoad }) {
         console.log(error);
       });
   };
-  // const handleCardUpdate = () => {
-  //   setSaving(true);
-  //
-  //   onCardUpdate(task).catch((error) => {
-  //     setSaving(false);
-  //     setErrors(error || {});
-  //
-  //     if (error instanceof Error) {
-  //       alert(`Update Failed! Error: ${error.message}`);
-  //     }
-  //   });
-  // };
 
-  // const handleCardDestroy = () => {
-  //   setSaving(true);
-  //
-  //   onCardDestroy(task).catch((error) => {
-  //     setSaving(false);
-  //
-  //     alert(`Destrucion Failed! Error: ${error.message}`);
-  //   });
-  // };
   const isLoading = isNil(task);
 
   return (
@@ -93,7 +72,9 @@ function EditPopup({ cardId, onClose, onCardLoad }) {
               <CloseIcon />
             </IconButton>
           }
-          title={isLoading ? 'Your task is loading. Please be patient.' : `Task # ${task.id} [${TaskPresenter.name(task)}]`}
+          title={
+            isLoading ? 'Your task is loading. Please be patient.' : `Task # ${task.id} [${TaskPresenter.name(task)}]`
+          }
         />
         <CardContent>
           {isLoading ? (
@@ -101,11 +82,23 @@ function EditPopup({ cardId, onClose, onCardLoad }) {
               <CircularProgress />
             </div>
           ) : (
-            <Form errors={errors} setErrors={setErrors} onChange={setTask} task={task} handleButtonState={handleButtonState} />
+            <Form
+              errors={errors}
+              setErrors={setErrors}
+              onChange={setTask}
+              task={task}
+              handleButtonState={handleButtonState}
+            />
           )}
         </CardContent>
         <CardActions className={styles.actions}>
-          <Button disabled={isLoading || isSaving} onClick={handleTaskUpdate} size="small" variant="contained" color="primary">
+          <Button
+            disabled={isLoading || isSaving}
+            onClick={handleTaskUpdate}
+            size="small"
+            variant="contained"
+            color="primary"
+          >
             Update
           </Button>
           <Button
