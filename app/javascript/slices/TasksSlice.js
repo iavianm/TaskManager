@@ -88,7 +88,7 @@ const tasksSlice = createSlice({
 
       return state;
     },
-    addTaskSuccess(state, { payload }) {
+    loadStateTaskSuccess(state, { payload }) {
       const card = payload.items[0];
       const column = state.board.columns.find((c) => c.id === card.state);
       const { cards, meta } = column;
@@ -104,7 +104,7 @@ const tasksSlice = createSlice({
 });
 
 const { loadColumnSuccess, loadColumnMoreSuccess } = tasksSlice.actions;
-const { createTaskSuccess, updateTaskSuccess, deleteTaskSuccess, addTaskSuccess } = tasksSlice.actions;
+const { createTaskSuccess, updateTaskSuccess, deleteTaskSuccess, loadStateTaskSuccess } = tasksSlice.actions;
 
 export default tasksSlice.reducer;
 
@@ -173,7 +173,7 @@ export const useTasksActions = () => {
     return column.cards[column.cards.length - 1].id;
   };
 
-  const addTask = (task) => {
+  const loadStateTask = (task) => {
     const lastCardId = lastTaskStateId(task.state);
     TasksRepository.index({
       q: { stateEq: task.state, idLt: lastCardId },
@@ -181,7 +181,7 @@ export const useTasksActions = () => {
       perPage: 1,
     }).then(({ data }) => {
       if (data.items.length > 0) {
-        dispatch(addTaskSuccess(data));
+        dispatch(loadStateTaskSuccess(data));
       }
     });
   };
@@ -189,7 +189,7 @@ export const useTasksActions = () => {
   const deleteTask = (task) =>
     TasksRepository.destroy(task.id).then(() => {
       dispatch(deleteTaskSuccess(task));
-      addTask(task);
+      loadStateTask(task);
     });
 
   return {
