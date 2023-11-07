@@ -13,7 +13,7 @@ import EditPopup from 'components/EditPopup';
 import useTasks from 'hooks/store/useTasks';
 
 function TaskBoard() {
-  const { board, loadBoard, loadColumnMore, handleCardDragEnd, createTask, updateTask, deleteTask } = useTasks();
+  const { board, loadBoard, loadColumnMore, handleCardDragEnd } = useTasks();
   const MODES = {
     ADD: 'add',
     NONE: 'none',
@@ -21,12 +21,10 @@ function TaskBoard() {
   };
   const [mode, setMode] = useState(MODES.NONE);
   const [openedTaskId, setOpenedTaskId] = useState(null);
-  const [formErrors, setFormErrors] = useState({});
+
   const styles = useStyles();
 
   useEffect(() => loadBoard(), []);
-
-  const handleClearErrorMessage = () => setFormErrors({});
 
   const handleAddPopupOpen = () => {
     setMode(MODES.ADD);
@@ -40,37 +38,9 @@ function TaskBoard() {
   const handleClose = () => {
     setMode(MODES.NONE);
     setOpenedTaskId(null);
-    handleClearErrorMessage();
   };
 
-  const formatErrorMessages = (errorObject) =>
-    Object.keys(errorObject).reduce((acc, key) => {
-      const [errorMessage] = errorObject[key];
-      return { ...acc, [key]: errorMessage };
-    }, {});
-
-  const handleTaskCreate = (params) =>
-    createTask(params)
-      .then(() => handleClose())
-      .catch((err) => {
-        setFormErrors(formatErrorMessages(err));
-        console.log(err);
-      });
-
   const loadTask = (id) => TasksRepository.show(id).then(({ data: { task } }) => task);
-
-  const handleTaskUpdate = (updatedTask) =>
-    updateTask(updatedTask)
-      .then(() => handleClose())
-      .catch((err) => {
-        setFormErrors(formatErrorMessages(err));
-        console.log(err);
-      });
-
-  const handleTaskDestroy = (task) =>
-    deleteTask(task)
-      .then(() => handleClose())
-      .catch((err) => console.log(err));
 
   return (
     <>
@@ -84,25 +54,8 @@ function TaskBoard() {
       >
         {board}
       </KanbanBoard>
-      {mode === MODES.ADD && (
-        <AddPopup
-          onCardCreate={handleTaskCreate}
-          formErrors={formErrors}
-          onClose={handleClose}
-          clearErrorMessage={handleClearErrorMessage}
-        />
-      )}
-      {mode === MODES.EDIT && (
-        <EditPopup
-          onCardLoad={loadTask}
-          onCardDestroy={handleTaskDestroy}
-          onCardUpdate={handleTaskUpdate}
-          onClose={handleClose}
-          cardId={openedTaskId}
-          formErrors={formErrors}
-          clearErrorMessage={handleClearErrorMessage}
-        />
-      )}
+      {mode === MODES.ADD && <AddPopup onClose={handleClose} />}
+      {mode === MODES.EDIT && <EditPopup onCardLoad={loadTask} onClose={handleClose} cardId={openedTaskId} />}
     </>
   );
 }

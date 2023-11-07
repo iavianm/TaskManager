@@ -16,27 +16,35 @@ import TaskForm from 'forms/TaskForm';
 
 import useStyles from 'components/AddPopup/useStyles';
 import TaskPresenter from 'presenters/TaskPresenter';
+import useTasks from 'hooks/store/useTasks';
 
-function AddPopup({ onClose, onCardCreate, formErrors, clearErrorMessage }) {
+function AddPopup({ onClose }) {
   const [task, changeTask] = useState(TaskForm.defaultAttributes());
   const [isSaving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
-  const handleCreate = () => {
+
+  const { createTask } = useTasks();
+
+  const handleTaskCreate = () => {
     setSaving(true);
 
-    onCardCreate(task).catch((error) => {
-      setSaving(false);
-      setErrors(error || {});
+    createTask(task)
+      .then(() => onClose())
+      .catch((error) => {
+        setSaving(false);
+        setErrors(error || {});
+        console.log(error);
 
-      if (error instanceof Error) {
-        alert(`Creation Failed! Error: ${error.message}`);
-      }
-    });
+        if (error instanceof Error) {
+          alert(`Creation Failed! Error: ${error.message}`);
+        }
+      });
   };
+
   const handleChangeTextField = (fieldName) => (event) => {
     changeTask({ ...task, [fieldName]: event.target.value });
     setSaving(false);
-    clearErrorMessage();
+    setErrors({});
   };
   const styles = useStyles();
 
@@ -54,9 +62,8 @@ function AddPopup({ onClose, onCardCreate, formErrors, clearErrorMessage }) {
         <CardContent>
           <div className={styles.form}>
             <TextField
-              FormHelperTextProps={{ className: errors.name || formErrors.name ? styles.errorText : '' }}
               error={has('name', errors)}
-              helperText={errors.name || formErrors.name}
+              helperText={errors.name}
               onChange={handleChangeTextField('name')}
               value={TaskPresenter.name(task)}
               label="Name"
@@ -64,9 +71,8 @@ function AddPopup({ onClose, onCardCreate, formErrors, clearErrorMessage }) {
               margin="dense"
             />
             <TextField
-              FormHelperTextProps={{ className: errors.description || formErrors.description ? styles.errorText : '' }}
               error={has('description', errors)}
-              helperText={errors.description || formErrors.description}
+              helperText={errors.description}
               onChange={handleChangeTextField('description')}
               value={TaskPresenter.description(task)}
               label="Description"
@@ -76,7 +82,7 @@ function AddPopup({ onClose, onCardCreate, formErrors, clearErrorMessage }) {
           </div>
         </CardContent>
         <CardActions className={styles.actions}>
-          <Button disabled={isSaving} onClick={handleCreate} variant="contained" size="small" color="primary">
+          <Button disabled={isSaving} onClick={handleTaskCreate} variant="contained" size="small" color="primary">
             Add
           </Button>
         </CardActions>
@@ -87,9 +93,6 @@ function AddPopup({ onClose, onCardCreate, formErrors, clearErrorMessage }) {
 
 AddPopup.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onCardCreate: PropTypes.func.isRequired,
-  formErrors: PropTypes.shape().isRequired,
-  clearErrorMessage: PropTypes.func.isRequired,
 };
 
 export default AddPopup;

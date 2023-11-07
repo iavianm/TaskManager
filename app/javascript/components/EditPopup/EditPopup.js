@@ -15,12 +15,15 @@ import Button from '@material-ui/core/Button';
 import CardActions from '@material-ui/core/CardActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TaskPresenter from 'presenters/TaskPresenter';
+import useTasks from 'hooks/store/useTasks';
 
-function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate, formErrors, clearErrorMessage }) {
+function EditPopup({ cardId, onClose, onCardLoad }) {
   const [task, setTask] = useState(null);
   const [isSaving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
   const styles = useStyles();
+
+  const { updateTask, deleteTask } = useTasks();
 
   useEffect(() => {
     onCardLoad(cardId).then(setTask);
@@ -30,28 +33,55 @@ function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate, f
     setSaving(false);
   };
 
-  const handleCardUpdate = () => {
+  const handleTaskUpdate = () => {
     setSaving(true);
 
-    onCardUpdate(task).catch((error) => {
-      setSaving(false);
-      setErrors(error || {});
-
-      if (error instanceof Error) {
-        alert(`Update Failed! Error: ${error.message}`);
-      }
-    });
+    updateTask(task)
+      .then(() => onClose())
+      .catch((error) => {
+        setSaving(false);
+        setErrors(error || {});
+        if (error instanceof Error) {
+          alert(`Update Failed! Error: ${error.message}`);
+        }
+        console.log(error);
+      });
   };
 
-  const handleCardDestroy = () => {
+  const handleTaskDestroy = () => {
     setSaving(true);
 
-    onCardDestroy(task).catch((error) => {
-      setSaving(false);
+    deleteTask(task)
+      .then(() => onClose())
+      .catch((error) => {
+        setSaving(false);
 
-      alert(`Destrucion Failed! Error: ${error.message}`);
-    });
+        alert(`Destrucion Failed! Error: ${error.message}`);
+        console.log(error);
+      });
   };
+  // const handleCardUpdate = () => {
+  //   setSaving(true);
+  //
+  //   onCardUpdate(task).catch((error) => {
+  //     setSaving(false);
+  //     setErrors(error || {});
+  //
+  //     if (error instanceof Error) {
+  //       alert(`Update Failed! Error: ${error.message}`);
+  //     }
+  //   });
+  // };
+
+  // const handleCardDestroy = () => {
+  //   setSaving(true);
+  //
+  //   onCardDestroy(task).catch((error) => {
+  //     setSaving(false);
+  //
+  //     alert(`Destrucion Failed! Error: ${error.message}`);
+  //   });
+  // };
   const isLoading = isNil(task);
 
   return (
@@ -71,23 +101,16 @@ function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate, f
               <CircularProgress />
             </div>
           ) : (
-            <Form
-              errors={errors}
-              onChange={setTask}
-              task={task}
-              formErrors={formErrors}
-              handleButtonState={handleButtonState}
-              clearErrorMessage={clearErrorMessage}
-            />
+            <Form errors={errors} setErrors={setErrors} onChange={setTask} task={task} handleButtonState={handleButtonState} />
           )}
         </CardContent>
         <CardActions className={styles.actions}>
-          <Button disabled={isLoading || isSaving} onClick={handleCardUpdate} size="small" variant="contained" color="primary">
+          <Button disabled={isLoading || isSaving} onClick={handleTaskUpdate} size="small" variant="contained" color="primary">
             Update
           </Button>
           <Button
             disabled={isLoading || isSaving}
-            onClick={handleCardDestroy}
+            onClick={handleTaskDestroy}
             size="small"
             variant="contained"
             color="secondary"
@@ -103,11 +126,7 @@ function EditPopup({ cardId, onClose, onCardDestroy, onCardLoad, onCardUpdate, f
 EditPopup.propTypes = {
   cardId: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
-  onCardDestroy: PropTypes.func.isRequired,
   onCardLoad: PropTypes.func.isRequired,
-  onCardUpdate: PropTypes.func.isRequired,
-  formErrors: PropTypes.shape().isRequired,
-  clearErrorMessage: PropTypes.func.isRequired,
 };
 
 export default EditPopup;

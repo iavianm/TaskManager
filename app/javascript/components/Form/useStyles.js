@@ -5,10 +5,6 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
   },
-
-  errorText: {
-    color: 'red',
-  },
 }));
 
 export default useStyles;
