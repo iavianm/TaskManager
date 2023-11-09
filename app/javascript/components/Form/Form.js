@@ -8,10 +8,9 @@ import useStyles from 'components/Form/useStyles';
 import UserSelect from 'components/UserSelect';
 import TaskPresenter from 'presenters/TaskPresenter';
 
-function Form({ errors, setErrors, onChange, task, handleButtonState }) {
+function Form({ errors, setErrors, onChange, task }) {
   const handleChangeTextField = (fieldName) => (event) => {
     onChange({ ...task, [fieldName]: event.target.value });
-    handleButtonState();
     setErrors({});
   };
   const styles = useStyles();
@@ -72,7 +71,6 @@ Form.propTypes = {
     author: PropTypes.arrayOf(PropTypes.string),
     assignee: PropTypes.arrayOf(PropTypes.string),
   }),
-  handleButtonState: PropTypes.func.isRequired,
   setErrors: PropTypes.func.isRequired,
 };
 

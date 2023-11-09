@@ -29,10 +29,6 @@ function EditPopup({ cardId, onClose, onCardLoad }) {
     onCardLoad(cardId).then(setTask);
   }, []);
 
-  const handleButtonState = () => {
-    setSaving(false);
-  };
-
   const handleTaskUpdate = () => {
     setSaving(true);
 
@@ -82,13 +78,7 @@ function EditPopup({ cardId, onClose, onCardLoad }) {
               <CircularProgress />
             </div>
           ) : (
-            <Form
-              errors={errors}
-              setErrors={setErrors}
-              onChange={setTask}
-              task={task}
-              handleButtonState={handleButtonState}
-            />
+            <Form errors={errors} setErrors={setErrors} onChange={setTask} task={task} />
           )}
         </CardContent>
         <CardActions className={styles.actions}>
