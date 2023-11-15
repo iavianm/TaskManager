@@ -50,7 +50,7 @@ UserSelect.propTypes = {
   isDisabled: PropTypes.bool.isRequired,
   isRequired: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.shape().isRequired,
+  value: PropTypes.shape(),
   helperText: PropTypes.string,
 };
 

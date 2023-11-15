@@ -16,24 +16,36 @@ import TaskForm from 'forms/TaskForm';
 
 import useStyles from 'components/AddPopup/useStyles';
 import TaskPresenter from 'presenters/TaskPresenter';
+import useTasks from 'hooks/store/useTasks';
 
-function AddPopup({ onClose, onCardCreate }) {
+function AddPopup({ onClose }) {
   const [task, changeTask] = useState(TaskForm.defaultAttributes());
   const [isSaving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
-  const handleCreate = () => {
+
+  const { createTask } = useTasks();
+
+  const handleTaskCreate = () => {
     setSaving(true);
 
-    onCardCreate(task).catch((error) => {
-      setSaving(false);
-      setErrors(error || {});
+    createTask(task)
+      .then(() => onClose())
+      .catch((error) => {
+        setSaving(false);
+        setErrors(error || {});
+        console.log(error);
 
-      if (error instanceof Error) {
-        alert(`Creation Failed! Error: ${error.message}`);
-      }
-    });
+        if (error instanceof Error) {
+          alert(`Creation Failed! Error: ${error.message}`);
+        }
+      });
   };
-  const handleChangeTextField = (fieldName) => (event) => changeTask({ ...task, [fieldName]: event.target.value });
+
+  const handleChangeTextField = (fieldName) => (event) => {
+    changeTask({ ...task, [fieldName]: event.target.value });
+    setSaving(false);
+    setErrors({});
+  };
   const styles = useStyles();
 
   return (
@@ -70,7 +82,7 @@ function AddPopup({ onClose, onCardCreate }) {
           </div>
         </CardContent>
         <CardActions className={styles.actions}>
-          <Button disabled={isSaving} onClick={handleCreate} variant="contained" size="small" color="primary">
+          <Button disabled={isSaving} onClick={handleTaskCreate} variant="contained" size="small" color="primary">
             Add
           </Button>
         </CardActions>
@@ -81,7 +93,6 @@ function AddPopup({ onClose, onCardCreate }) {
 
 AddPopup.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onCardCreate: PropTypes.func.isRequired,
 };
 
 export default AddPopup;
