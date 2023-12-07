@@ -19,6 +19,14 @@ if ENV['CI']
 end
 
 ENV['RAILS_ENV'] ||= 'test'
+
+require 'simplecov'
+# SimpleCov.coverage_dir('/task_manager/coverage')
+SimpleCov.start('rails')
+
+require 'coveralls'
+Coveralls.wear!('rails')
+
 require_relative '../config/environment'
 require 'rails/test_help'
 
