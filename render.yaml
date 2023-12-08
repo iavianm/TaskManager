@@ -22,3 +22,7 @@ services:
           property: connectionString
       - key: RAILS_MASTER_KEY
         sync: false
+      - key: ROLLBAR_ACCESS_TOKEN
+        sync: false
+      - key: NEWRELIC_LICENSE_KEY
+        sync: false
