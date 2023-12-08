@@ -24,6 +24,7 @@ gem 'js-routes', '~>2.2.7'
 gem 'dotenv-rails'
 
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'factory_bot_rails'
