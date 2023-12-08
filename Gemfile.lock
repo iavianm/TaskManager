@@ -87,8 +87,14 @@ GEM
     case_transform (0.2)
       activesupport
     concurrent-ruby (1.2.2)
+    coveralls_reborn (0.28.0)
+      simplecov (~> 0.22.0)
+      term-ansicolor (~> 1.7)
+      thor (~> 1.2)
+      tins (~> 1.32)
     crass (1.0.6)
     date (3.3.3)
+    docile (1.4.0)
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
@@ -249,6 +255,13 @@ GEM
     simple_form (5.2.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.12.3)
+    simplecov-lcov (0.8.0)
+    simplecov_json_formatter (0.1.4)
     slim (5.1.1)
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
@@ -270,10 +283,15 @@ GEM
     state_machines-activerecord (0.8.0)
       activerecord (>= 5.1)
       state_machines-activemodel (>= 0.8.0)
+    sync (0.5.0)
     temple (0.10.2)
+    term-ansicolor (1.7.1)
+      tins (~> 1.0)
     thor (1.2.2)
     tilt (2.2.0)
     timeout (0.4.0)
+    tins (1.32.1)
+      sync
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
@@ -311,6 +329,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
+  coveralls_reborn
   dotenv-rails
   factory_bot_rails
   jbuilder (~> 2.7)
@@ -327,6 +346,8 @@ DEPENDENCIES
   sass-rails (>= 6)
   selenium-webdriver (>= 4.0.0.rc1)
   simple_form
+  simplecov
+  simplecov-lcov
   slim-rails
   state_machines
   state_machines-activerecord
