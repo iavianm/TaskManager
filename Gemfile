@@ -22,6 +22,7 @@ gem 'webpacker-react'
 gem 'active_model_serializers'
 gem 'js-routes', '~>2.2.7'
 gem 'dotenv-rails'
+gem 'rollbar'
 
 gem 'bootsnap', '>= 1.4.4', require: false
 
