@@ -5,7 +5,7 @@ body
   .forgot-password
     .container
       .header
-        h2 Forgot Password
+        h2 Forgot Password?
       = form_with url: password_resets_path, local: true do |form|
         .form-group
           = form.email_field :email, id: 'email_field', required: true, class: 'form-control', placeholder: 'Enter your email', value: @previous_input
