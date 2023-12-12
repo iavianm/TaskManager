@@ -62,7 +62,7 @@ class Web::PasswordResetsController < Web::ApplicationController
   end
 
   def password_reset_expired?(reset_sent_at)
-    reset_sent_at < 30.minutes.ago
+    reset_sent_at < 24.hours.ago
   end
 
   def check_valid_user_and_token
