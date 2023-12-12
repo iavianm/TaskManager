@@ -16,4 +16,9 @@ class UserMailerPreview < ActionMailer::Preview
     task = Task.first
     UserMailer.with(user: user, task: task).task_notification(:deleted)
   end
+
+  def forgot_password
+    user = User.first
+    UserMailer.with(user: user, token: user.reset_token).reset_password_email
+  end
 end
