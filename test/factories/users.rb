@@ -6,6 +6,8 @@ FactoryBot.define do
     email
     avatar
     type { '' }
+    reset_token
+    reset_sent_at
 
     factory :developer do
       type { 'Developer' }

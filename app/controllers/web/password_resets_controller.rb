@@ -28,9 +28,9 @@ class Web::PasswordResetsController < Web::ApplicationController
   end
 
   def update
-    check_valid_user_and_token
+    return unless check_valid_user_and_token
+
     if params[:user][:password].empty?
-      @user.errors.add(:password, "can't be empty")
       @error_message = "Password can't be empty"
       render('edit')
     elsif @user.update(user_params)
@@ -72,5 +72,6 @@ class Web::PasswordResetsController < Web::ApplicationController
       return
     end
     check_expiration
+    true
   end
 end

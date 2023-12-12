@@ -49,6 +49,7 @@ group :test do
   gem 'coveralls_reborn', require: false
   gem 'simplecov'
   gem 'simplecov-lcov', require: false
+  gem 'rails-controller-testing'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

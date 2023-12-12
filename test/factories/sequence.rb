@@ -8,6 +8,12 @@ FactoryBot.define do
   sequence :avatar do |n|
     "avatar#{n}#{SecureRandom.urlsafe_base64(8)}.com"
   end
+  sequence :reset_token do
+    SecureRandom.urlsafe_base64(8)
+  end
+  sequence :reset_sent_at do
+    Time.current
+  end
   sequence :expired_at do |n|
     Date.current + n
   end

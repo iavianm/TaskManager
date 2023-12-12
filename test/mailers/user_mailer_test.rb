@@ -5,6 +5,7 @@ class UserMailerTest < ActionMailer::TestCase
     @user = create(:user)
     @task = create(:task, author: @user)
     @params = { user: @user, task: @task }
+    @email_params = { user: @user, token: @user.reset_token }
   end
 
   test 'task_notification for task creation' do
@@ -44,5 +45,18 @@ class UserMailerTest < ActionMailer::TestCase
     assert_equal [@user.email], email.to
     assert_equal 'Task Deleted', email.subject
     assert email.body.to_s.include?("Task #{@task.id} was deleted")
+  end
+
+  test 'reset_password_email' do
+    email = UserMailer.with(@email_params).reset_password_email
+
+    assert_emails 1 do
+      email.deliver_now
+    end
+
+    assert_equal ['noreply@taskmanager.com'], email.from
+    assert_equal [@user.email], email.to
+    assert_equal 'Password reset instructions', email.subject
+    assert email.body.to_s.include?("Hello, #{@user.first_name}!")
   end
 end
