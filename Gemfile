@@ -25,6 +25,7 @@ gem 'dotenv-rails'
 gem 'rollbar'
 
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'newrelic_rpm'
 
 group :development, :test do
   gem 'factory_bot_rails'
