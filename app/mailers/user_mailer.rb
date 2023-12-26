@@ -1,20 +1,25 @@
 class UserMailer < ApplicationMailer
   default from: 'noreply@taskmanager.com'
-  def task_notification(action)
+
+  def task_created
     user = params[:user]
     @task = params[:task]
-    @action = action
 
-    case @action
-    when :created
-      subject = 'Task Created'
-    when :updated
-      subject = 'Task Updated'
-    when :deleted
-      subject = 'Task Deleted'
-    end
+    mail(to: user.email, subject: 'Task Created')
+  end
 
-    mail(to: user.email, subject: subject)
+  def task_updated
+    user = params[:user]
+    @task = params[:task]
+
+    mail(to: user.email, subject: 'Task Updated')
+  end
+
+  def task_deleted
+    user = params[:user]
+    @task = params[:task]
+
+    mail(to: user.email, subject: 'Task Deleted')
   end
 
   def reset_password_email

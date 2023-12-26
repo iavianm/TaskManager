@@ -2,19 +2,19 @@ class UserMailerPreview < ActionMailer::Preview
   def task_created
     user = User.first
     task = Task.first
-    UserMailer.with(user: user, task: task).task_notification(:created)
+    UserMailer.with(user: user, task: task).task_created
   end
 
   def task_updated
     user = User.first
     task = Task.first
-    UserMailer.with(user: user, task: task).task_notification(:updated)
+    UserMailer.with(user: user, task: task).task_updated
   end
 
   def task_deleted
     user = User.first
     task = Task.first
-    UserMailer.with(user: user, task: task).task_notification(:deleted)
+    UserMailer.with(user: user, task: task).task_destroyed
   end
 
   def forgot_password

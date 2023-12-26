@@ -14,7 +14,6 @@ html lang="en"
 
   body
     = javascript_packs_with_chunks_tag 'application'
-    = javascript_pack_tag 'closeFlashPopup'
 
     - flash.each do |type, message|
       div class="flash-container"

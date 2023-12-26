@@ -8,13 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const passwordField = document.getElementById('password_field');
   const passwordConfirmationField = document.getElementById('password_confirmation_field');
 
-  const EMAIL_REGEXP_PART1 = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@/;
-  const EMAIL_REGEXP_PART2 = /[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?/;
-  const EMAIL_REGEXP_PART3 = /\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?/;
-  const EMAIL_REGEXP_PART4 = /(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-  const EMAIL_REGEXP = new RegExp(
-    EMAIL_REGEXP_PART1.source + EMAIL_REGEXP_PART2.source + EMAIL_REGEXP_PART3.source + EMAIL_REGEXP_PART4.source,
-  );
+  const EMAIL_REGEXP = /^\S+@\S+\.\S+$/;
 
   const validateEmail = (email) => EMAIL_REGEXP.test(String(email));
 

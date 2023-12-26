@@ -9,7 +9,7 @@ class UserMailerTest < ActionMailer::TestCase
   end
 
   test 'task_notification for task creation' do
-    email = UserMailer.with(@params).task_notification(:created)
+    email = UserMailer.with(@params).task_created
 
     assert_emails 1 do
       email.deliver_now
@@ -22,7 +22,7 @@ class UserMailerTest < ActionMailer::TestCase
   end
 
   test 'task_notification for task update' do
-    email = UserMailer.with(@params).task_notification(:updated)
+    email = UserMailer.with(@params).task_updated
 
     assert_emails 1 do
       email.deliver_now
@@ -35,7 +35,7 @@ class UserMailerTest < ActionMailer::TestCase
   end
 
   test 'task_notification for task deletion' do
-    email = UserMailer.with(@params).task_notification(:deleted)
+    email = UserMailer.with(@params).task_deleted
 
     assert_emails 1 do
       email.deliver_now
