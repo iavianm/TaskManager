@@ -12,50 +12,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const validateEmail = (email) => EMAIL_REGEXP.test(String(email));
 
+  if (submitPassButton) {
+    submitPassButton.classList.add('disabled', submitPassButton.disabled);
+  }
+
+  if (submitEmailButton) {
+    submitEmailButton.classList.add('disabled', submitEmailButton.disabled);
+  }
+
   const updateSubmitEmailButtonState = () => {
-    if (!validateEmail(emailField.value)) {
-      submitEmailButton.disabled = true;
-      submitEmailButton.classList.add('disabled');
-    } else {
-      submitEmailButton.classList.remove('disabled');
-      submitEmailButton.disabled = false;
+    const emailValue = emailField.value;
+    const isValidEmail = validateEmail(emailValue);
+    const isEmailEmpty = emailValue.length === 0;
+    submitEmailButton.disabled = !isValidEmail || isEmailEmpty;
+    submitEmailButton.classList.toggle('disabled', !isValidEmail || isEmailEmpty);
+    if (errorEmailMessage) {
+      errorEmailMessage.textContent =
+        (isEmailEmpty && 'Email is empty') || (!isValidEmail && 'Invalid email format') || '';
     }
   };
 
   if (emailField && submitEmailButton) {
-    emailField.addEventListener('input', () => {
-      if (errorEmailMessage) {
-        errorEmailMessage.textContent = '';
-      }
-      updateSubmitEmailButtonState();
-    });
-    updateSubmitEmailButtonState();
+    emailField.addEventListener('input', updateSubmitEmailButtonState);
   }
 
   const updateSubmitPassButtonState = () => {
-    const passwordsMatch = passwordField.value === passwordConfirmationField.value;
-    const passwordsNotEmpty = passwordField.value !== '' && passwordConfirmationField.value !== '';
-    if (!passwordsMatch || !passwordsNotEmpty) {
-      submitPassButton.disabled = true;
-      submitPassButton.classList.add('disabled');
-    } else {
-      submitPassButton.classList.remove('disabled');
-      submitPassButton.disabled = false;
-    }
-  };
+    const isPasswordShort = passwordField.value.length < 2;
+    const isPasswordMismatch = passwordField.value !== passwordConfirmationField.value;
 
-  const checkPasswords = () => {
-    if (passwordField.value !== passwordConfirmationField.value) {
-      errorPassMessage.textContent = 'Passwords do not match';
-    } else {
-      errorPassMessage.textContent = '';
-    }
-    updateSubmitPassButtonState();
+    submitPassButton.disabled = isPasswordShort || isPasswordMismatch;
+    submitPassButton.classList.toggle('disabled', submitPassButton.disabled);
+
+    errorPassMessage.textContent =
+      (isPasswordShort && 'Password is too short') || (isPasswordMismatch && 'Passwords do not match') || '';
   };
 
   if (passwordField && passwordConfirmationField && submitPassButton) {
-    passwordField.addEventListener('input', checkPasswords);
-    passwordConfirmationField.addEventListener('input', checkPasswords);
-    updateSubmitPassButtonState();
+    passwordField.addEventListener('input', updateSubmitPassButtonState);
+    passwordConfirmationField.addEventListener('input', updateSubmitPassButtonState);
   }
 });

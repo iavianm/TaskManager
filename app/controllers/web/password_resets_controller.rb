@@ -4,13 +4,6 @@ class Web::PasswordResetsController < Web::ApplicationController
   def new; end
 
   def create
-    if params[:email].blank?
-      flash.now[:danger] = 'Email cannot be blank'
-      @error_message = 'Email cannot be blank'
-      @previous_input = params[:email]
-      return render('new')
-    end
-
     token_service = GenerateTokenService.new(params[:email].downcase)
     @user = token_service.find_user_by_email
 
@@ -39,16 +32,13 @@ class Web::PasswordResetsController < Web::ApplicationController
       return
     end
 
-    if params[:user][:password].empty?
-      @error_message = "Password can't be empty"
-      return render('edit')
-    end
-
     if @user.update(user_params)
       @user.update_columns(reset_token: nil, reset_sent_at: nil)
       flash[:success] = 'Password has been reset.'
       redirect_to(root_url)
     else
+      @error_message = 'Password has not been reset.'
+      flash[:danger] = 'Password has not been reset.'
       render('edit')
     end
   end
