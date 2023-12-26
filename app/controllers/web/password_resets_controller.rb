@@ -11,8 +11,8 @@ class Web::PasswordResetsController < Web::ApplicationController
       return render('new')
     end
 
-    email_service = GenerateTokenService.new(params[:email].downcase)
-    @user = email_service.find_user_by_email
+    token_service = GenerateTokenService.new(params[:email].downcase)
+    @user = token_service.find_user_by_email
 
     unless @user
       flash.now[:danger] = 'User not found'
@@ -21,7 +21,7 @@ class Web::PasswordResetsController < Web::ApplicationController
       return render('new')
     end
 
-    email_service.send_token_reset_email
+    token_service.send_token_reset_email
     redirect_to(root_url)
     flash.clear
   end
@@ -60,8 +60,8 @@ class Web::PasswordResetsController < Web::ApplicationController
   end
 
   def set_user_and_check_token
-    email_service = GenerateTokenService.new(params[:token])
-    @user = email_service.find_user_by_token
+    token_service = GenerateTokenService.new(params[:token])
+    @user = token_service.find_user_by_token
 
     if @user.nil?
       redirect_to(root_url, alert: 'User not found or token is invalid')
@@ -69,7 +69,7 @@ class Web::PasswordResetsController < Web::ApplicationController
       return
     end
 
-    if email_service.password_reset_expired?(@user.reset_sent_at)
+    if token_service.password_reset_expired?(@user.reset_sent_at)
       flash[:danger] = 'Password reset has expired.'
       redirect_to(new_password_reset_url)
       @token_expired = true
