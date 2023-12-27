@@ -1,44 +1,41 @@
 class Web::PasswordResetsController < Web::ApplicationController
-  before_action :set_user_and_check_token, only: [:edit, :update]
-
   def new; end
 
   def create
-    token_service = GenerateTokenService.new(params[:email].downcase)
-    @user = token_service.find_user_by_email
-
-    unless @user
-      flash.now[:danger] = 'User not found'
-      @error_message = 'User not found'
+    @reset_form = PasswordResetForm.new(email: params[:email].downcase)
+    if @reset_form.user_email_valid?
+      GenerateTokenService.new(email: params[:email].downcase).send_token_reset_email
+      flash[:success] = 'Check your email for password reset instructions'
+      redirect_to(root_url)
+    else
+      flash.now[:danger] = @reset_form.errors.full_messages.join(', ')
+      @error_message = @reset_form.errors.full_messages.join(', ')
       @previous_input = params[:email]
-      return render('new')
+      render('new')
     end
-
-    token_service.send_token_reset_email
-    redirect_to(root_url)
-    flash.clear
   end
 
   def edit
-    if @user.nil? || @token_expired
-      return
-    end
+    @reset_form = PasswordResetForm.new(token: params[:token])
 
-    flash[:success] = 'Enter new password'
+    if @reset_form.user_token_valid?
+      @user = @reset_form.user_by_token
+      flash[:success] = 'Enter new password'
+    else
+      redirect_to(new_password_reset_url, alert: @reset_form.errors.full_messages.join(', '))
+    end
   end
 
   def update
-    if @user.nil? || @token_expired
-      return
-    end
-
-    if @user.update(user_params)
-      @user.update_columns(reset_token: nil, reset_sent_at: nil)
+    @reset_form = PasswordResetForm.new(token: params[:token], password: user_params)
+    if @reset_form.valid?
+      user = @reset_form.user_by_token
+      user.update(user_params)
+      user.update_columns(reset_token: nil, reset_sent_at: nil)
       flash[:success] = 'Password has been reset.'
       redirect_to(root_url)
     else
-      @error_message = 'Password has not been reset.'
-      flash[:danger] = 'Password has not been reset.'
+      flash.now[:danger] = @reset_form.errors.full_messages.join(', ')
       render('edit')
     end
   end
@@ -47,22 +44,5 @@ class Web::PasswordResetsController < Web::ApplicationController
 
   def user_params
     params.require(:user).permit(:password, :password_confirmation)
-  end
-
-  def set_user_and_check_token
-    token_service = GenerateTokenService.new(params[:token])
-    @user = token_service.find_user_by_token
-
-    if @user.nil?
-      redirect_to(root_url, alert: 'User not found or token is invalid')
-      @token_expired = true
-      return
-    end
-
-    if token_service.password_reset_expired?(@user.reset_sent_at)
-      flash[:danger] = 'Password reset has expired.'
-      redirect_to(new_password_reset_url)
-      @token_expired = true
-    end
   end
 end

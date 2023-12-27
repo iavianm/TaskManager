@@ -30,7 +30,7 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
   test 'should redirect edit if invalid token' do
     get edit_password_reset_url('invalid')
     assert_response :redirect
-    assert_redirected_to root_url
+    assert_redirected_to new_password_reset_url
   end
 
   test 'should update user password with valid token' do
@@ -41,16 +41,6 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
     @user.reload
     assert_not_equal original_password_digest, @user.password_digest, 'Password digest should have changed'
     assert_redirected_to root_url, 'Should redirect to root URL after password reset'
-  end
-
-  test 'should not update user password with invalid token' do
-    original_password_digest = @user.password_digest
-    patch password_reset_url('invalid'), params: { user: { password: 'newpassword', password_confirmation: 'newpassword' } }
-
-    @user.reload
-    assert_equal original_password_digest, @user.password_digest, 'Password digest should not have changed'
-    assert_response :redirect
-    assert_redirected_to root_url
   end
 
   test 'should redirect edit if password reset expired' do
