@@ -11,12 +11,12 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should create reset token for existing user' do
-    post password_resets_url, params: { email: @user.email }
+    post password_resets_url, params: { user: { email: @user.email } }
     assert_redirected_to root_url
   end
 
   test 'should not create reset token for non-existing user' do
-    post password_resets_url, params: { email: 'nonexistent@example.com' }
+    post password_resets_url, params: { user: { email: 'nonexistent@example.com' } }
     assert_template 'new'
     assert_not_empty flash[:danger]
   end
@@ -36,7 +36,8 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
   test 'should update user password with valid token' do
     token = @user.reset_token
     original_password_digest = @user.password_digest
-    patch password_reset_url(token), params: { user: { password: 'newpassword', password_confirmation: 'newpassword' } }
+
+    patch password_reset_url(token), params: { user: { password: 'newpassword', password_confirmation: 'newpassword', token: token } }
 
     @user.reload
     assert_not_equal original_password_digest, @user.password_digest, 'Password digest should have changed'
