@@ -1,5 +1,4 @@
-class GenerateTokenService
-  include ActiveModel::Model
+class TokenService
 
   attr_accessor :email
 
@@ -17,12 +16,14 @@ class GenerateTokenService
 
     token = generate_token
 
-    set_password_reset_attributes(user, token)
-    send_token_reset_email(user, token)
+    User.transaction do
+      set_password_reset_attributes(user, token)
+      send_token_reset_email(user, token)
+    end
   end
 
   def set_password_reset_attributes(user, token)
-    user.update_columns(
+    user.update!(
       reset_token: token,
       reset_sent_at: Time.current,
     )

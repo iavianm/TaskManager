@@ -31,6 +31,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rubocop'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'pry'
 end
 
 group :development do

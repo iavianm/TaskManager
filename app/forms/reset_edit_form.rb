@@ -7,18 +7,16 @@ class ResetEditForm
 
   def initialize(attributes = {})
     super
-    @reset_service = ResetService.new(token: token)
+    @valid_token_service = ValidateTokenService.new(attributes)
   end
 
   def user
-    @reset_service.user_by_token
+    @valid_token_service.user
   end
 
   def check_token
-    unless @reset_service.user_token_valid?
-      @reset_service.errors.each do |error|
-        errors.add(error.attribute, error.message)
-      end
+    unless @valid_token_service.valid?
+      errors.merge!(@valid_token_service.errors)
     end
   end
 end

@@ -7,18 +7,16 @@ class ResetCreateForm
 
   def initialize(attributes = {})
     super
-    @reset_service = ResetService.new(email: email.downcase)
+    @valid_email_service = ValidateEmailService.new(attributes)
   end
 
   def user
-    @reset_service.user_by_email
+    @valid_email_service.user
   end
 
   def check_email
-    unless @reset_service.user_email_valid?
-      @reset_service.errors.each do |error|
-        errors.add(error.attribute, error.message)
-      end
+    unless @valid_email_service.valid?
+      errors.merge!(@valid_email_service.errors)
     end
   end
 end

@@ -5,16 +5,23 @@ class Web::PasswordResetsController < Web::ApplicationController
     create_form = ResetCreateForm.new(user_params)
 
     unless create_form.valid?
-      error_message = create_form.errors.full_messages.join(', ')
-      flash.now[:danger] = error_message
-      @error_message = error_message
-      @previous_input = create_form.email
+      handle_invalid_form(create_form)
       return render('new')
     end
 
-    GenerateTokenService.new(create_form.email.downcase).update_params_and_send_email
-    flash[:success] = 'Check your email for password reset instructions'
-    redirect_to(root_url)
+    begin
+      TokenService.new(create_form.email.downcase).update_params_and_send_email
+      flash[:success] = 'Check your email for password reset instructions'
+      redirect_to(root_url)
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("Failed to create reset token: #{e.message}")
+
+      flash.now[:danger] = 'There was a problem processing your request.'
+
+      @error_message = 'There was a problem processing your request.'
+      @previous_input = create_form.email
+      render('new')
+    end
   end
 
   def edit
@@ -47,5 +54,12 @@ class Web::PasswordResetsController < Web::ApplicationController
 
   def user_params
     params.require(:user).permit(:token, :email, :password, :password_confirmation)
+  end
+
+  def handle_invalid_form(create_form)
+    error_message = create_form.errors.full_messages.join(', ')
+    flash.now[:danger] = error_message
+    @error_message = error_message
+    @previous_input = create_form.email
   end
 end

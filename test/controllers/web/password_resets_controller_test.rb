@@ -53,4 +53,11 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     assert_redirected_to new_password_reset_url
   end
+
+  test 'should not create reset token with wrong email' do
+    post password_resets_url, params: { user: { email: 'email' } }
+
+    assert_template 'new'
+    assert_not_empty flash[:danger]
+  end
 end
