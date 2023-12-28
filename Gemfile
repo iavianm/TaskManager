@@ -31,7 +31,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rubocop'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
-  gem 'pry'
+  gem 'pry-rails', '~> 0.3.9'
 end
 
 group :development do
