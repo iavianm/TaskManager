@@ -7,7 +7,7 @@ class ResetEditForm
 
   def initialize(attributes = {})
     super
-    @valid_token_service = ValidateTokenService.new(attributes)
+    @valid_token_service = ValidateTokenService.new(attributes.slice(:token))
   end
 
   def user

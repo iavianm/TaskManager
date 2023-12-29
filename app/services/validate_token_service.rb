@@ -1,7 +1,7 @@
 class ValidateTokenService
   include ActiveModel::Model
 
-  attr_accessor :token, :password, :password_confirmation
+  attr_accessor :token
 
   validate :user_token_valid?
 
