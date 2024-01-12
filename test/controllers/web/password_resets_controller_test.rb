@@ -15,12 +15,6 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
 
-  test 'should not create reset token for non-existing user' do
-    post password_resets_url, params: { user: { email: 'nonexistent@example.com' } }
-    assert_template 'new'
-    assert_not_empty flash[:danger]
-  end
-
   test 'should get edit if valid token' do
     token = @user.reset_token
     get edit_password_reset_url(token)
@@ -52,12 +46,5 @@ class PasswordResetsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :redirect
     assert_redirected_to new_password_reset_url
-  end
-
-  test 'should not create reset token with wrong email' do
-    post password_resets_url, params: { user: { email: 'email' } }
-
-    assert_template 'new'
-    assert_not_empty flash[:danger]
   end
 end

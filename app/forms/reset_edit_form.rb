@@ -3,20 +3,13 @@ class ResetEditForm
 
   attr_accessor :token
 
-  validate :check_token
-
-  def initialize(attributes = {})
-    super
-    @valid_token_service = ValidateTokenService.new(attributes.slice(:token))
-  end
+  validate :token_valid?
 
   def user
-    @valid_token_service.user
+    User.find_by(reset_token: token)
   end
 
-  def check_token
-    unless @valid_token_service.valid?
-      errors.merge!(@valid_token_service.errors)
-    end
+  def token_valid?
+    errors.add(:token, :invalid) unless TokenService.token_valid?(token)
   end
 end

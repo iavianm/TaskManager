@@ -12,9 +12,6 @@ body
             = form.password_field :user_password, id: 'password_field', required: true, name: 'user[password]', class: 'form-control', placeholder: 'Enter your password'
             = form.password_field :user_password_confirmation, id: 'password_confirmation_field', required: true, name: 'user[password_confirmation]', class: 'form-control', placeholder: 'Repeat your password'
           div.error_message id="error_pass_message"
-            - if @error_message
-              = @error_message
-              - @error_message = nil
         = form.submit "Reset password", class: 'button', id: 'submit_pass_button'
       .footer
         | &copy; Dualboot Learn 2023

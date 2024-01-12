@@ -7,11 +7,8 @@ body
         h2 Forgot Password?
       = form_with url: password_resets_path, local: true do |form|
         .form-group
-          = form.email_field :email, id: 'email_field', required: true, class: 'form-control', placeholder: 'Enter your email', value: @previous_input, name: 'user[email]'
+          = form.email_field :email, id: 'email_field', required: true, class: 'form-control', placeholder: 'Enter your email', name: 'user[email]'
           div.error_message id="error_email_message"
-            - if @error_message
-              = @error_message
-              - @error_message = nil
         = form.submit "Send me reset instructions", class: 'button', id: 'submit_email_button'
       .footer
         | &copy; Dualboot Learn 2023

@@ -3,20 +3,10 @@ class ResetCreateForm
 
   attr_accessor :email
 
-  validate :check_email
+  validates :email, presence: true, format: { with: /\A\S+@.+\.\S+\z/ }
+  validate :email_valid?
 
-  def initialize(attributes = {})
-    super
-    @valid_email_service = ValidateEmailService.new(attributes)
-  end
-
-  def user
-    @valid_email_service.user
-  end
-
-  def check_email
-    unless @valid_email_service.valid?
-      errors.merge!(@valid_email_service.errors)
-    end
+  def email_valid?
+    errors.add(:email, :invalid) unless TokenService.email_valid?(email)
   end
 end
