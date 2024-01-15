@@ -6,7 +6,7 @@ class ResetEditForm
   validate :token_valid?
 
   def user
-    User.find_by(reset_token: token)
+    TokenService.find_user_by_token(token)
   end
 
   def token_valid?

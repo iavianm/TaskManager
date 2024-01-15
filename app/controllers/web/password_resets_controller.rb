@@ -4,9 +4,7 @@ class Web::PasswordResetsController < Web::ApplicationController
   def create
     create_form = ResetCreateForm.new(user_params)
 
-    if create_form.valid?
-      TokenService.update_params_and_send_email(create_form.email.downcase)
-    end
+    TokenService.update_params_and_send_email(create_form.email.downcase) if create_form.valid?
 
     flash[:success] = 'Check your email for password reset instructions'
     redirect_to(root_url)
@@ -14,9 +12,7 @@ class Web::PasswordResetsController < Web::ApplicationController
 
   def edit
     edit_form = ResetEditForm.new(token: params[:token])
-    unless edit_form.valid?
-      return redirect_to(new_password_reset_url, alert: edit_form.errors.full_messages.join(', '))
-    end
+    return redirect_to(new_password_reset_url, alert: edit_form.errors.full_messages.join(', ')) if edit_form.invalid?
 
     @user = edit_form.user
   end
