@@ -1,0 +1,89 @@
+//= require material-design-lite/material.min.css
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+#main {
+  flex: 1 0 auto;
+}
+
+.page-content {
+  padding: 20px;
+}
+
+.page-content .mdl-textfield {
+  display: block;
+}
+
+.forgot-password {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #efefef;
+  .container { max-width: 600px; margin: 30px auto; background-color: #ffffff; padding: 10px; border-radius: 8px; }
+  .header { background-color: #3F52B5; color: #ffffff; text-align: center; padding: 10px 0; }
+  .footer { text-align: center; padding: 30px; color: #b1b1b1; font-size: 12px; }
+  .button { display: block; background-color: #3F52B5; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin: 0 auto; }
+  .form-group { text-align: center; margin: 30px auto; }
+  .form-control { padding: 0 10px; min-width: 200px; min-height: 35px; font-size: 20px; margin-bottom: 5px; border-radius: 8px; border: 1px solid #b1b1b1; }
+  .error_message { color: red; height: 20px; }
+}
+
+.flash-container {
+  position: fixed;
+  z-index: 100;
+  width: 300px;
+  height: 50px;
+  left: 0%;
+  right: 0%;
+  top: 5px;
+  background-color: #efefef;
+  border-radius: 7px;
+  border: 1px solid #b1b1b1;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .close-flash {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+.flash {
+  box-sizing: border-box;
+  z-index: 100;
+  font-size: 16px;
+  padding: 0 10px;
+  &.danger {
+    color: red;
+  }
+  &.success {
+    color: green;
+  }
+}
+
+.form-group-pass {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  .form-control {
+    max-width: 250px;
+    width: 100%;
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #b1b1b1 !important;
+}

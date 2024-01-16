@@ -11,7 +11,7 @@ class SessionForm
   validate :user_valid?
 
   def user
-    User.find_by(email: email)
+    TokenService.find_user_by_email(email)
   end
 
   private

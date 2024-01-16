@@ -14,6 +14,13 @@ html lang="en"
 
   body
     = javascript_packs_with_chunks_tag 'application'
+
+    - flash.each do |type, message|
+      div class="flash-container"
+        div class="flash #{type}"
+          = message
+        button.close-flash[type="button"] &times;
+
     header.mdl-layout__header
       .mdl-layout__header-row
         .material-icons tab

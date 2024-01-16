@@ -37,3 +37,4 @@ yarn-debug.log*
 .idea*
 .env
 .coverage
+.DS_Store

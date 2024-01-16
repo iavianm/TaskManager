@@ -31,6 +31,8 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'rubocop'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'pry'
+  gem 'pry-rails', '~> 0.3.9'
 end
 
 group :development do
@@ -38,6 +40,8 @@ group :development do
   gem 'rack-mini-profiler', '~> 2.0'
   gem 'listen', '~> 3.3'
   gem 'bullet'
+  gem 'letter_opener'
+  gem 'letter_opener_web'
 end
 
 group :test do
@@ -47,6 +51,7 @@ group :test do
   gem 'coveralls_reborn', require: false
   gem 'simplecov'
   gem 'simplecov-lcov', require: false
+  gem 'rails-controller-testing'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
