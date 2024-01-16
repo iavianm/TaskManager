@@ -23,6 +23,10 @@ gem 'active_model_serializers'
 gem 'js-routes', '~>2.2.7'
 gem 'dotenv-rails'
 gem 'rollbar'
+gem 'sidekiq'
+gem 'sidekiq-failures'
+gem 'sidekiq-throttled'
+gem 'sidekiq-unique-jobs'
 
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'newrelic_rpm'
