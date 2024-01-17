@@ -31,4 +31,14 @@ class ActiveSupport::TestCase
   parallelize(workers: :number_of_processors)
 
   fixtures :all
+
+  def after_teardown
+    super
+
+    remove_uploaded_files
+  end
+
+  def remove_uploaded_files
+    FileUtils.rm_rf(ActiveStorage::Blob.service.root)
+  end
 end
