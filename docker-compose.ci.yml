@@ -8,7 +8,7 @@ services:
     depends_on:
       - db
     environment:
-      - COVERAGE
+      - COVERAGE=true
       - CI=true
       - RAILS_ENV
       - COVERALLS_REPO_TOKEN
