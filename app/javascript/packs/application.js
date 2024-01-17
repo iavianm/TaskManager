@@ -9,8 +9,6 @@ import 'channels';
 import 'material-design-lite/material.js';
 import WebpackerReact from 'webpacker-react';
 import App from 'components/App';
-import './formValidation';
-import './closeFlashPopup';
 
 WebpackerReact.setup({ App });
 
