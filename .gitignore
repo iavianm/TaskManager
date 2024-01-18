@@ -36,5 +36,5 @@ yarn-debug.log*
 .yarn-integrity
 .idea*
 .env
-.coverage
+/coverage
 .DS_Store

@@ -1,4 +1,4 @@
-class TokenService
+module TokenService
   class << self
     def token_valid?(token)
       user = find_user_by_token(token)

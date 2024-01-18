@@ -27,6 +27,9 @@ gem 'sidekiq'
 gem 'sidekiq-failures'
 gem 'sidekiq-throttled'
 gem 'sidekiq-unique-jobs'
+gem 'mini_magick', '~> 4.8'
+gem 'virtus', '~> 1.0', '>= 1.0.5'
+gem 'file_validators', '~> 3.0'
 
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'newrelic_rpm'
