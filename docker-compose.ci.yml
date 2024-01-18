@@ -8,6 +8,7 @@ services:
     depends_on:
       - db
     environment:
+      - COVERAGE
       - RAILS_ENV
       - COVERALLS_REPO_TOKEN
       - DATABASE_HOST=db

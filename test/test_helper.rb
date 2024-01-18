@@ -3,13 +3,14 @@ require 'simplecov'
 SimpleCov.start('rails') do
   require 'simplecov-lcov'
 
+  formatter SimpleCov::Formatter::LcovFormatter
+
   SimpleCov::Formatter::LcovFormatter.config do |c|
     c.report_with_single_file = true
-    c.single_report_path = 'coverage/lcov.info'
+    c.output_directory = 'coverage'
   end
 
-  formatter SimpleCov::Formatter::LcovFormatter
-  add_filter ['version.rb', 'initializer.rb', 'config.rb']
+  add_filter ['version.rb', 'initializer.rb']
 end
 
 ENV['RAILS_ENV'] ||= 'test'
