@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { has, isNil } from 'ramda';
+import { has } from 'ramda';
 
 import TextField from '@material-ui/core/TextField';
 
 import useStyles from 'components/Form/useStyles';
 import UserSelect from 'components/UserSelect';
 import TaskPresenter from 'presenters/TaskPresenter';
-import ImageUpload from 'components/ImageUpload';
-import Button from '@material-ui/core/Button';
 
-function Form({ errors, setErrors, onChange, task, onAttachImage, onRemoveImage, setChangeImage, changeImage }) {
+function Form({ errors, setErrors, onChange, task }) {
   const handleChangeTextField = (fieldName) => (event) => {
     onChange({ ...task, [fieldName]: event.target.value });
     setErrors({});
@@ -60,27 +58,6 @@ function Form({ errors, setErrors, onChange, task, onAttachImage, onRemoveImage,
         helperText={errors.assignee}
         isClearable
       />
-
-      {isNil(TaskPresenter.imageUrl(task)) ? (
-        <div className={styles.imageUploadContainer}>
-          <ImageUpload
-            onUpload={(image) => onAttachImage(TaskPresenter.id(task), image).then(() => setChangeImage(!changeImage))}
-          />
-        </div>
-      ) : (
-        <div className={styles.previewContainer}>
-          <img className={styles.preview} src={TaskPresenter.imageUrl(task)} alt="Attachment" />
-          <Button
-            variant="contained"
-            size="small"
-            color="secondary"
-            className={styles.imageButton}
-            onClick={() => onRemoveImage(TaskPresenter.id(task)).then(() => setChangeImage(!changeImage))}
-          >
-            Remove image
-          </Button>
-        </div>
-      )}
     </form>
   );
 }
@@ -95,10 +72,6 @@ Form.propTypes = {
     assignee: PropTypes.arrayOf(PropTypes.string),
   }),
   setErrors: PropTypes.func.isRequired,
-  onAttachImage: PropTypes.func.isRequired,
-  onRemoveImage: PropTypes.func.isRequired,
-  setChangeImage: PropTypes.func.isRequired,
-  changeImage: PropTypes.bool.isRequired,
 };
 
 Form.defaultProps = {
