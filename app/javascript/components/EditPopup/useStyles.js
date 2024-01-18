@@ -10,6 +10,7 @@ const useStyles = makeStyles(() => ({
 
   root: {
     width: 465,
+    position: 'relative',
   },
 
   loader: {

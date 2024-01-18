@@ -192,6 +192,10 @@ export const useTasksActions = () => {
       loadStateTask(task);
     });
 
+  const attachTaskImage = (id, params) => TasksRepository.attach_image(id, params);
+
+  const removeTaskImage = (id) => TasksRepository.removeImage(id);
+
   return {
     loadBoard,
     loadColumnMore,
@@ -199,5 +203,7 @@ export const useTasksActions = () => {
     createTask,
     updateTask,
     deleteTask,
+    attachTaskImage,
+    removeTaskImage,
   };
 };

@@ -22,12 +22,13 @@ function EditPopup({ cardId, onClose, onCardLoad }) {
   const [isSaving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
   const styles = useStyles();
+  const [changeImage, setChangeImage] = useState(false);
 
-  const { updateTask, deleteTask } = useTasks();
+  const { attachTaskImage, removeTaskImage, updateTask, deleteTask } = useTasks();
 
   useEffect(() => {
     onCardLoad(cardId).then(setTask);
-  }, []);
+  }, [changeImage]);
 
   const handleTaskUpdate = () => {
     setSaving(true);
@@ -78,7 +79,16 @@ function EditPopup({ cardId, onClose, onCardLoad }) {
               <CircularProgress />
             </div>
           ) : (
-            <Form errors={errors} setErrors={setErrors} onChange={setTask} task={task} />
+            <Form
+              errors={errors}
+              changeImage={changeImage}
+              setErrors={setErrors}
+              onChange={setTask}
+              setChangeImage={setChangeImage}
+              task={task}
+              onAttachImage={attachTaskImage}
+              onRemoveImage={removeTaskImage}
+            />
           )}
         </CardContent>
         <CardActions className={styles.actions}>

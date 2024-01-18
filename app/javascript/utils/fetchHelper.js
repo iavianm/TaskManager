@@ -2,6 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 
 import { camelize, decamelize } from 'utils/keysConverter';
+import { serialize as objectToFormData } from 'object-to-formdata';
 
 function authenticityToken() {
   const token = document.querySelector('meta[name="csrf-token"]');
@@ -17,6 +18,7 @@ function headers() {
   };
 }
 
+axios.defaults.headers.get = headers();
 axios.defaults.headers.post = headers();
 axios.defaults.headers.put = headers();
 axios.defaults.headers.delete = headers();
@@ -59,5 +61,24 @@ export default {
 
   delete(url) {
     return axios.delete(url).then(camelize);
+  },
+
+  putFormData(url, json) {
+    const { image } = json.attachment;
+    const body = decamelize(json);
+    body.attachment.image = image;
+    const formData = objectToFormData(body);
+
+    return axios
+      .put(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(camelize);
+  },
+
+  putRemoveImage(url) {
+    return axios.put(url).then(camelize);
   },
 };
