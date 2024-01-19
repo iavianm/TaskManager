@@ -9,6 +9,26 @@ databases:
       - "0.0.0.0/0"
 
 services:
+  - type: redis
+    name: sidekiq-redis
+    region: frankfurt
+    maxmemoryPolicy: noeviction
+
+  - type: worker
+    name: sidekiq-worker
+    runtime: ruby
+    region: frankfurt
+    buildCommand: bundle install
+    startCommand: bundle exec sidekiq
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: sidekiq-redis
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+
   - type: web
     name: task_manager
     runtime: ruby
