@@ -5,14 +5,14 @@ databases:
     region: frankfurt
     plan: free
     postgresMajorVersion: 13
-    ipAllowList:
-      - "0.0.0.0/0"
+    ipAllowList: []
 
 services:
   - type: redis
     name: sidekiq-redis
     region: frankfurt
     maxmemoryPolicy: noeviction
+    ipAllowList: []
 
   - type: worker
     name: sidekiq-worker
@@ -37,8 +37,6 @@ services:
     env: ruby
     buildCommand: "./bin/render-build.sh"
     startCommand: REDIS_URL="redis://${REDIS_HOST}" bundle exec puma -C config/puma.rb
-    ipAllowList:
-      - "0.0.0.0/0"
     envVars:
       - key: REDIS_HOST
         fromService:
