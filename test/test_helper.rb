@@ -1,19 +1,19 @@
+ENV['RAILS_ENV'] ||= 'test'
 require 'simplecov'
 
 SimpleCov.start('rails') do
-  require 'simplecov-lcov'
+  if ENV['CI']
+    require 'simplecov-lcov'
 
-  formatter SimpleCov::Formatter::LcovFormatter
+    SimpleCov::Formatter::LcovFormatter.config do |c|
+      c.report_with_single_file = true
+      c.single_report_path = 'coverage/lcov.info'
+    end
 
-  SimpleCov::Formatter::LcovFormatter.config do |c|
-    c.report_with_single_file = true
-    c.output_directory = 'coverage'
+    formatter SimpleCov::Formatter::LcovFormatter
   end
-
-  add_filter ['version.rb', 'initializer.rb']
 end
 
-ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
 require 'sidekiq/testing'
