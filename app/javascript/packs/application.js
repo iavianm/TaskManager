@@ -3,9 +3,14 @@
 // a relevant structure within app/javascript and only use these pack files to reference
 // that code so it'll be compiled.
 
-import Rails from "@rails/ujs"
-import * as ActiveStorage from "@rails/activestorage"
-import "channels"
+import Rails from '@rails/ujs';
+import * as ActiveStorage from '@rails/activestorage';
+import 'channels';
+import 'material-design-lite/material.js';
+import WebpackerReact from 'webpacker-react';
+import App from 'components/App';
 
-Rails.start()
-ActiveStorage.start()
+WebpackerReact.setup({ App });
+
+Rails.start();
+ActiveStorage.start();
